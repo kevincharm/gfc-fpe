@@ -45,7 +45,7 @@ function installConsumer(directory, tarball, typescript = false) {
             2,
         )}\n`,
     )
-    run('pnpm', ['install', '--offline', '--ignore-scripts'], directory)
+    run('pnpm', ['install', '--ignore-scripts'], directory)
 }
 
 describe('packed package', () => {
