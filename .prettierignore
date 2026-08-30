@@ -1,8 +1,5 @@
 node_modules
-artifacts
-cache
-coverage*
-gasReporterOutput.json
-typechain
-typechain-types
+dist
+coverage
+pnpm-lock.yaml
 LICENSE
