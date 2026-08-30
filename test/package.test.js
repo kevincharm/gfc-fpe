@@ -7,14 +7,9 @@ import { describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url))
-const packageJson = JSON.parse(
-    readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
-) as {
-    devDependencies: { '@types/node': string; typescript: string }
-    packageManager: string
-}
+const packageJson = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'))
 
-function run(command: string, arguments_: string[], cwd: string): void {
+function run(command, arguments_, cwd) {
     const result = spawnSync(command, arguments_, {
         cwd,
         encoding: 'utf8',
@@ -26,7 +21,7 @@ function run(command: string, arguments_: string[], cwd: string): void {
     )
 }
 
-function installConsumer(directory: string, tarball: string, typescript = false): void {
+function installConsumer(directory, tarball, typescript = false) {
     writeFileSync(
         join(directory, 'package.json'),
         `${JSON.stringify(
@@ -62,7 +57,7 @@ describe('packed package', () => {
             run('pnpm', ['pack', '--pack-destination', packed], projectRoot)
             const tarballs = readdirSync(packed).filter((file) => file.endsWith('.tgz'))
             assert.equal(tarballs.length, 1)
-            const tarball = join(packed, tarballs[0]!)
+            const tarball = join(packed, tarballs[0])
 
             const javascript = join(temporary, 'javascript-consumer')
             mkdirSync(javascript)

@@ -27,7 +27,7 @@
     "clean": "node --input-type=module --eval \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true })\"",
     "format": "prettier --write .",
     "test": "pnpm test:unit && pnpm test:pack",
-    "test:pack": "node --test test/package.test.ts",
+    "test:pack": "node --test test/package.test.js",
     "test:unit": "node --test test/index.test.ts",
     "verify": "pnpm check && pnpm test && npm pack --dry-run",
     "prepack": "pnpm clean && pnpm build"
