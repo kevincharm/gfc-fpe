@@ -49,7 +49,12 @@ function roundBit(preimage: Uint8Array, halfIndex: bigint, round: bigint): bigin
     return BigInt(keccak_256(preimage)[UINT256_BYTES - 1]! & 1)
 }
 
-function shuffleOnce(x: bigint, modulus: bigint, rounds: bigint, preimage: Uint8Array): bigint {
+function applyPermutation(
+    x: bigint,
+    modulus: bigint,
+    rounds: bigint,
+    preimage: Uint8Array,
+): bigint {
     const mid = modulus / 2n
     for (let round = 0n; round < rounds; ++round) {
         const halfIndex = x % mid
@@ -59,7 +64,12 @@ function shuffleOnce(x: bigint, modulus: bigint, rounds: bigint, preimage: Uint8
     return x
 }
 
-function deshuffleOnce(x: bigint, modulus: bigint, rounds: bigint, preimage: Uint8Array): bigint {
+function applyInversePermutation(
+    x: bigint,
+    modulus: bigint,
+    rounds: bigint,
+    preimage: Uint8Array,
+): bigint {
     const mid = modulus / 2n
     for (let round = rounds; round > 0n;) {
         --round
@@ -94,9 +104,9 @@ export function shuffle(x: bigint, domain: bigint, seed: bigint, rounds: bigint)
     assertInputs(x, domain, seed, rounds)
     const modulus = domain + (domain & 1n)
     const preimage = makePreimage(seed, modulus)
-    x = shuffleOnce(x, modulus, rounds, preimage)
+    x = applyPermutation(x, modulus, rounds, preimage)
     if (x === domain) {
-        x = shuffleOnce(x, modulus, rounds, preimage)
+        x = applyPermutation(x, modulus, rounds, preimage)
     }
     return x
 }
@@ -108,9 +118,9 @@ export function deshuffle(x: bigint, domain: bigint, seed: bigint, rounds: bigin
     assertInputs(x, domain, seed, rounds)
     const modulus = domain + (domain & 1n)
     const preimage = makePreimage(seed, modulus)
-    x = deshuffleOnce(x, modulus, rounds, preimage)
+    x = applyInversePermutation(x, modulus, rounds, preimage)
     if (x === domain) {
-        x = deshuffleOnce(x, modulus, rounds, preimage)
+        x = applyInversePermutation(x, modulus, rounds, preimage)
     }
     return x
 }
